@@ -1,20 +1,17 @@
 from openpyxl import load_workbook
 from pathlib import Path
 
-
 # ==================================================
 # MEGA MAN STAR FORCE CARD FINDER
 # VERSION 1.0
 # CARD CATEGORY: STANDARD
 # ==================================================
 
-
 # Excel workbook location
 EXCEL_FILE = Path(__file__).parent / "MMSF Cards.xlsx"
 
 # Currently supported worksheet
 SHEET_NAME = "MMSF Standard Cards"
-
 
 # ==================================================
 # GAME INFORMATION
@@ -36,7 +33,6 @@ GAMES = {
         "column": 7
     }
 }
-
 
 # ==================================================
 # LOAD EXCEL DATABASE
@@ -121,7 +117,6 @@ def load_card_database():
 
     return database
 
-
 # ==================================================
 # SEARCH FOR MULTIPLE CARDS
 # ==================================================
@@ -184,7 +179,6 @@ def find_cards(database, game, card_numbers):
     print("=" * 55)
     print("\n")
 
-
 # ==================================================
 # GET CARD NUMBERS FROM USER
 # ==================================================
@@ -223,8 +217,7 @@ def get_card_numbers():
                 "Enter positive card numbers separated by commas."
             )
 
-
-# ==================================================
+# =================================================
 # MAIN MENU
 # ==================================================
 
@@ -289,7 +282,6 @@ def main():
         find_cards(database, game, card_numbers)
 
         input("Press Enter to return to the main menu...")
-
 
 # ==================================================
 # START PROGRAM
