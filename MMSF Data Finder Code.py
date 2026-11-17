@@ -1,3 +1,13 @@
+#Joshua Riley MMSF Code
+#Project Start Date: 11/16/26
+#Project Finished Date: Work in Progress
+#Code Cabailities (currently): Finding MMSF 1, 2, and 3 Standard Cards
+
+#If code isn't running, may need to install openpyxl
+#Copy and paste the code below in the command prompt
+#When copying and pasting it, make sure it isn't a comment
+#pip install openpyxl
+
 from openpyxl import load_workbook
 from pathlib import Path
 
