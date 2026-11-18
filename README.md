@@ -11,4 +11,4 @@ All sources will be linked of where I got all the card info, but first I need to
 
 Progress: 
 11/16/26: Started crafting the general code outline + standard cards lists
-11/17/26: Built a code that can navigate the standard cards and successfully crafted a code that can do that
+11/17/26: Built a code that can navigate the standard and mega cards
