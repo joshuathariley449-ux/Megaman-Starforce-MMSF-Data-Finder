@@ -11,7 +11,7 @@ from openpyxl import load_workbook
 from pathlib import Path
 
 #Excel workbook information
-#This is important, this code WILL only run with the excel I've set it up to
+This is important, this code WILL only run with the excel I've set it up to
 
 #This code makes sure we open the workbook called MMSF Cards.xlsx
 #If the name of the excel file were ever to be change, this would need to be changed as well
@@ -157,9 +157,9 @@ def load_mega_card_database():
         start_column = MegaCards_GameTitles[game]["column"]
 
         for row in range(3, sheet.max_row + 1):
-            # The existing Mega worksheet stores a version in column A
-            # for Star Force 1. Star Force 2 and 3 are not version-split
-            # in the current Mega database structure.
+            #The existing Mega worksheet stores a version in column A
+            #for Star Force 1. Star Force 2 and 3 are not version-split
+            #in the current Mega database structure.
             if game == "1":
                 game_version = sheet.cell(row=row, column=1).value
             else:
@@ -358,8 +358,8 @@ def find_mega_cards(database, game, card_numbers, version=None):
     for card_number in card_numbers:
         card = database[game].get(card_number)
 
-        # Preserve the existing Mega behavior:
-        # Star Force 1 checks the selected version, then shared cards.
+        #Preserve the existing Mega behavior:
+        #Star Force 1 checks the selected version, then shared cards.
         if game == "1" and card is not None:
             selected_card = card.get(version)
 
@@ -469,7 +469,7 @@ def get_card_numbers():
             if any(number <= 0 for number in card_numbers):
                 raise ValueError
 
-            # Remove duplicates while preserving order.
+            #Remove duplicates while preserving order.
             card_numbers = list(dict.fromkeys(card_numbers))
             return card_numbers
 
@@ -597,7 +597,7 @@ def main():
             print("Card Category: Mega")
             version = None
 
-            # Preserve the existing Mega version selection.
+            #Preserve the existing Mega version selection.
             if game == "1":
                 version = select_version()
                 print("\nSelected Version:", version)
@@ -615,7 +615,7 @@ def main():
         elif category == "3":
             print("Card Category: Giga")
 
-            # Giga cards are version-specific in all three GameTitles.
+            #Giga cards are version-specific in all three GameTitles.
             version = select_giga_version(game)
             print("\nSelected Version:", version)
 
