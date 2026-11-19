@@ -11,7 +11,7 @@ from openpyxl import load_workbook
 from pathlib import Path
 
 #Excel workbook information
-This is important, this code WILL only run with the excel I've set it up to
+#This is important, this code WILL only run with the excel I've set it up to
 
 #This code makes sure we open the workbook called MMSF Cards.xlsx
 #If the name of the excel file were ever to be change, this would need to be changed as well
@@ -47,7 +47,7 @@ GameTitles = {
 #Lines 50-54 create directory to find cards related to MMSF 1, 2, and 3 respectively for Mega Class Cards
 #While there are only 3 storyline games, each game (1,2, and 3) has different versions, which also means special version exclusive cards
 #In order for this code to work, it has to be able to navigate version exclusive cards, starting with the mega class cards
-MegaCards_GameTitles = {
+GameTitlesforMegaCards = {
     "1": {"name": "Mega Man Star Force 1", "column": 2},
     "2": {"name": "Mega Man Star Force 2", "column": 5},
     "3": {"name": "Mega Man Star Force 3", "column": 8}
@@ -57,7 +57,7 @@ MegaCards_GameTitles = {
 #Similar to what I talked about in lines 47-49; there are game version exclusives cards wise for the other games
 #All 7 titles have unique giga cards to them, luckily all found the same way
 #This little bit of code makes sure the code can navigate the Giga Cards Sheet correctly when finding the card the user requests
-GigaCards_GameTitles = {
+GameTitlesforGigaCards = {
     "1": {"name": "Mega Man Star Force 1", "column": 2},
     "2": {"name": "Mega Man Star Force 2", "column": 6},
     "3": {"name": "Mega Man Star Force 3", "column": 10}
@@ -110,38 +110,38 @@ def open_worksheet(sheet_name):
     return workbook, workbook[sheet_name]
 
 #Code realated to loading the Standard Class Cards Information
-def load_card_database():
+def loadtheStandardCardsDatabase():
     workbook, sheet = open_worksheet(StandardCards)
     database = {}
 
     for game, information in GameTitles.items():
         database[game] = {}
-        start_column = information["column"]
+        Initialcolumn = information["column"]
 
         for row in range(3, sheet.max_row + 1):
-            card_number = sheet.cell(row=row, column=start_column).value
-            card_name = sheet.cell(row=row, column=start_column + 1).value
-            card_locations = sheet.cell(row=row, column=start_column + 2).value
+            CardNumberValue = sheet.cell(row=row, column=Initialcolumn).value
+            NameofCard = sheet.cell(row=row, column=Initialcolumn + 1).value
+            LocationsofCard = sheet.cell(row=row, column=Initialcolumn + 2).value
 
-            if card_number is None:
+            if CardNumberValue is None:
                 continue
 
             try:
-                card_number = int(card_number)
+                CardNumberValue = int(CardNumberValue)
             except (ValueError, TypeError):
                 continue
 
             locations = (
                 [
                     location.strip()
-                    for location in str(card_locations).splitlines()
+                    for location in str(LocationsofCard).splitlines()
                     if location.strip()
                 ]
-                if card_locations else []
+                if LocationsofCard else []
             )
 
-            database[game][card_number] = {
-                "name": card_name,
+            database[game][CardNumberValue] = {
+                "name": NameofCard,
                 "locations": locations
             }
 
@@ -149,78 +149,78 @@ def load_card_database():
     return database
 
 #Code realated to loading the Mega Class Cards Information
-def load_mega_card_database():
+def loadtheMegaCardsDatabase():
     workbook, sheet = open_worksheet(MegaCards)
     database = {game: {} for game in GameTitles}
 
     for game in GameTitles:
-        start_column = MegaCards_GameTitles[game]["column"]
+        Initialcolumn = GameTitlesforMegaCards[game]["column"]
 
         for row in range(3, sheet.max_row + 1):
             #The existing Mega worksheet stores a version in column A
             #for Star Force 1. Star Force 2 and 3 are not version-split
             #in the current Mega database structure.
             if game == "1":
-                game_version = sheet.cell(row=row, column=1).value
+                VersionofGame = sheet.cell(row=row, column=1).value
             else:
-                game_version = None
+                VersionofGame = None
 
-            card_number = sheet.cell(row=row, column=start_column).value
-            card_name = sheet.cell(row=row, column=start_column + 1).value
-            card_locations = sheet.cell(row=row, column=start_column + 2).value
+            CardNumberValue = sheet.cell(row=row, column=Initialcolumn).value
+            NameofCard = sheet.cell(row=row, column=Initialcolumn + 1).value
+            LocationsofCard = sheet.cell(row=row, column=Initialcolumn + 2).value
 
-            if card_number is None:
+            if CardNumberValue is None:
                 continue
 
             try:
-                card_number = int(card_number)
+                CardNumberValue = int(CardNumberValue)
             except (ValueError, TypeError):
                 continue
 
             locations = (
                 [
                     location.strip()
-                    for location in str(card_locations).splitlines()
+                    for location in str(LocationsofCard).splitlines()
                     if location.strip()
                 ]
-                if card_locations else []
+                if LocationsofCard else []
             )
 
-            card_information = {
-                "name": card_name,
+            InformationofCard = {
+                "name": NameofCard,
                 "locations": locations
             }
 
             if game == "1":
-                if game_version is None:
+                if VersionofGame is None:
                     continue
 
-                version_text = str(game_version).strip().lower()
+                GameVersionText = str(VersionofGame).strip().lower()
 
-                if "leo" in version_text and "pegasus" in version_text:
-                    version_key = "All"
-                elif version_text == "leo":
-                    version_key = "Leo"
-                elif version_text == "pegasus":
-                    version_key = "Pegasus"
-                elif version_text == "dragon":
-                    version_key = "Dragon"
+                if "leo" in GameVersionText and "pegasus" in GameVersionText:
+                    version = "All"
+                elif GameVersionText == "leo":
+                    version = "Leo"
+                elif GameVersionText == "pegasus":
+                    version = "Pegasus"
+                elif GameVersionText == "dragon":
+                    version = "Dragon"
                 else:
                     continue
 
-                if card_number not in database[game]:
-                    database[game][card_number] = {}
+                if CardNumberValue not in database[game]:
+                    database[game][CardNumberValue] = {}
 
-                database[game][card_number][version_key] = card_information
+                database[game][CardNumberValue][version] = InformationofCard
 
             else:
-                database[game][card_number] = card_information
+                database[game][CardNumberValue] = InformationofCard
 
     workbook.close()
     return database
 
 #Code realated to loading the Giga Class Cards Information
-def load_giga_card_database():
+def loadtheGigaCardsDatabase():
     workbook, sheet = open_worksheet(GigaCards)
 
     #Each game has its own card-number dictionary.
@@ -228,65 +228,65 @@ def load_giga_card_database():
     database = {game: {} for game in GameTitles}
 
     for game in GameTitles:
-        start_column = GigaCards_GameTitles[game]["column"]
-        version_column = start_column - 1
+        Initialcolumn = GameTitlesforGigaCards[game]["column"]
+        Columnwithversionname = Initialcolumn - 1
 
         for row in range(3, sheet.max_row + 1):
-            game_version = sheet.cell(
+            VersionofGame = sheet.cell(
                 row=row,
-                column=version_column
+                column=Columnwithversionname
             ).value
 
-            card_number = sheet.cell(
+            CardNumberValue = sheet.cell(
                 row=row,
-                column=start_column
+                column=Initialcolumn
             ).value
 
-            card_name = sheet.cell(
+            NameofCard = sheet.cell(
                 row=row,
-                column=start_column + 1
+                column=Initialcolumn + 1
             ).value
 
-            card_locations = sheet.cell(
+            LocationsofCard = sheet.cell(
                 row=row,
-                column=start_column + 2
+                column=Initialcolumn + 2
             ).value
 
-            if card_number is None or game_version is None:
+            if CardNumberValue is None or VersionofGame is None:
                 continue
 
             try:
-                card_number = int(card_number)
+                CardNumberValue = int(CardNumberValue)
             except (ValueError, TypeError):
                 continue
 
-            version_text = str(game_version).strip().lower()
+            GameVersionText = str(VersionofGame).strip().lower()
 
             #Match the worksheet's version text to the game's
             #supported version names
-            version_key = None
-            for version_name in GigaClassVersions[game].values():
-                if version_text == version_name.lower():
-                    version_key = version_name
+            version = None
+            for VersionofGame in GigaClassVersions[game].values():
+                if GameVersionText == VersionofGame.lower():
+                    version = VersionofGame
                     break
 
-            if version_key is None:
+            if version is None:
                 continue
 
             locations = (
                 [
                     location.strip()
-                    for location in str(card_locations).splitlines()
+                    for location in str(LocationsofCard).splitlines()
                     if location.strip()
                 ]
-                if card_locations else []
+                if LocationsofCard else []
             )
 
-            if card_number not in database[game]:
-                database[game][card_number] = {}
+            if CardNumberValue not in database[game]:
+                database[game][CardNumberValue] = {}
 
-            database[game][card_number][version_key] = {
-                "name": card_name,
+            database[game][CardNumberValue][version] = {
+                "name": NameofCard,
                 "locations": locations
             }
 
@@ -294,23 +294,23 @@ def load_giga_card_database():
     return database
 
 #Code to search for the Standard Cards, if requested by the user
-def find_standard_cards(database, game, card_numbers):
+def find_standard_cards(database, game, CardNumberValues):
     print("\n")
     print("=" * 55)
     print("                  SEARCH RESULTS")
     print("=" * 55)
     print(f"Game: {GameTitles[game]['name']}")
     print("Card Category: Standard")
-    print(f"Cards Requested: {len(card_numbers)}")
+    print(f"Cards Requested: {len(CardNumberValues)}")
     print("=" * 55)
 
     found_count = 0
     missing_count = 0
 
-    for card_number in card_numbers:
-        card = database[game].get(card_number)
+    for CardNumberValue in CardNumberValues:
+        card = database[game].get(CardNumberValue)
 
-        print(f"\nCARD #{card_number}")
+        print(f"\nCARD #{CardNumberValue}")
         print("-" * 55)
 
         if card is None:
@@ -338,7 +338,7 @@ def find_standard_cards(database, game, card_numbers):
     print("\n")
 
 #Code to search for the Mega Cards, if requested by the user
-def find_mega_cards(database, game, card_numbers, version=None):
+def find_mega_cards(database, game, CardNumberValues, version=None):
     print("\n")
     print("=" * 55)
     print("                  SEARCH RESULTS")
@@ -349,14 +349,14 @@ def find_mega_cards(database, game, card_numbers, version=None):
     if game == "1":
         print(f"Game Version: {version}")
 
-    print(f"Cards Requested: {len(card_numbers)}")
+    print(f"Cards Requested: {len(CardNumberValues)}")
     print("=" * 55)
 
     found_count = 0
     missing_count = 0
 
-    for card_number in card_numbers:
-        card = database[game].get(card_number)
+    for CardNumberValue in CardNumberValues:
+        card = database[game].get(CardNumberValue)
 
         #Preserve the existing Mega behavior:
         #Star Force 1 checks the selected version, then shared cards.
@@ -368,7 +368,7 @@ def find_mega_cards(database, game, card_numbers, version=None):
 
             card = selected_card
 
-        print(f"\nCARD #{card_number}")
+        print(f"\nCARD #{CardNumberValue}")
         print("-" * 55)
 
         if card is None:
@@ -396,7 +396,7 @@ def find_mega_cards(database, game, card_numbers, version=None):
     print("\n")
 
 #Code to search for the Giga Cards, if requested by the user
-def find_giga_cards(database, game, card_numbers, version):
+def find_giga_cards(database, game, CardNumberValues, version):
     print("\n")
     print("=" * 55)
     print("                  SEARCH RESULTS")
@@ -404,17 +404,17 @@ def find_giga_cards(database, game, card_numbers, version):
     print(f"Game: {GameTitles[game]['name']}")
     print("Card Category: Giga")
     print(f"Game Version: {version}")
-    print(f"Cards Requested: {len(card_numbers)}")
+    print(f"Cards Requested: {len(CardNumberValues)}")
     print("=" * 55)
 
     found_count = 0
     missing_count = 0
 
-    for card_number in card_numbers:
-        version_cards = database[game].get(card_number, {})
+    for CardNumberValue in CardNumberValues:
+        version_cards = database[game].get(CardNumberValue, {})
         card = version_cards.get(version)
 
-        print(f"\nCARD #{card_number}")
+        print(f"\nCARD #{CardNumberValue}")
         print("-" * 55)
 
         if card is None:
@@ -450,7 +450,7 @@ def find_giga_cards(database, game, card_numbers, version):
 #MMSF 2: 1-42
 #MMSF 3: 1-45
 #Giga Class Cards are numbered 1-5
-def get_card_numbers():
+def get_CardNumberValues():
     while True:
         card_input = input(
             "\nEnter missing card numbers "
@@ -461,17 +461,17 @@ def get_card_numbers():
             if not card_input:
                 raise ValueError
 
-            card_numbers = [
+            CardNumberValues = [
                 int(number.strip())
                 for number in card_input.split(",")
             ]
 
-            if any(number <= 0 for number in card_numbers):
+            if any(number <= 0 for number in CardNumberValues):
                 raise ValueError
 
             #Remove duplicates while preserving order.
-            card_numbers = list(dict.fromkeys(card_numbers))
-            return card_numbers
+            CardNumberValues = list(dict.fromkeys(CardNumberValues))
+            return CardNumberValues
 
         except ValueError:
             print(
@@ -509,8 +509,8 @@ def select_giga_version(game):
         print("             SELECT GIGA GAME VERSION")
         print("=" * 55)
 
-        for number, version_name in available_versions.items():
-            print(f"{number}. {version_name}")
+        for number, VersionofGame in available_versions.items():
+            print(f"{number}. {VersionofGame}")
 
         selection = input("\nEnter selection: ").strip()
 
@@ -529,9 +529,9 @@ def main():
     print("\nLoading Excel databases...")
 
     try:
-        standard_database = load_card_database()
-        mega_database = load_mega_card_database()
-        giga_database = load_giga_card_database()
+        standard_database = loadtheStandardCardsDatabase()
+        mega_database = loadtheMegaCardsDatabase()
+        giga_database = loadtheGigaCardsDatabase()
 
     except Exception as error:
         print(f"\nERROR: {error}")
@@ -584,12 +584,12 @@ def main():
         #Loop for finding standard class cards across the 7 titles
         if category == "1":
             print("Card Category: Standard")
-            card_numbers = get_card_numbers()
+            CardNumberValues = get_CardNumberValues()
 
             find_standard_cards(
                 standard_database,
                 game,
-                card_numbers
+                CardNumberValues
             )
 
         #Loop for finding mega class cards across the 7 titles
@@ -602,12 +602,12 @@ def main():
                 version = select_version()
                 print("\nSelected Version:", version)
 
-            card_numbers = get_card_numbers()
+            CardNumberValues = get_CardNumberValues()
 
             find_mega_cards(
                 mega_database,
                 game,
-                card_numbers,
+                CardNumberValues,
                 version
             )
 
@@ -619,12 +619,12 @@ def main():
             version = select_giga_version(game)
             print("\nSelected Version:", version)
 
-            card_numbers = get_card_numbers()
+            CardNumberValues = get_CardNumberValues()
 
             find_giga_cards(
                 giga_database,
                 game,
-                card_numbers,
+                CardNumberValues,
                 version
             )
 
